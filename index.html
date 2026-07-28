@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Trans — Spanish ↔ English Translator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-1:#0f1724; --bg-2:#061225; --card:#071827; --muted:#9fb0c6; --accent:#3ee7c6; --accent-2:#60a5fa; --glass:rgba(255,255,255,0.03);
+    }
+    *{box-sizing:border-box}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px;background:radial-gradient(1000px 400px at 10% 10%,rgba(96,165,250,0.06),transparent),linear-gradient(180deg,var(--bg-1),var(--bg-2));color:#e7f0fb}
+    .frame{width:min(1100px,98%);background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:14px;padding:20px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 10px 40px rgba(3,7,18,0.7)}
+
+    header{display:flex;align-items:center;gap:14px}
+    .logo{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#052024;font-weight:800;font-size:20px;box-shadow:0 6px 20px rgba(60,170,200,0.12)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .grid{display:grid;grid-template-columns:1fr 86px 1fr;gap:14px;margin-top:18px;align-items:start}
+    .panel{background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.006));border-radius:10px;padding:12px;border:1px solid var(--glass)}
+    label{display:block;font-size:12px;color:var(--muted);margin-bottom:8px}
+    textarea{width:100%;min-height:240px;padding:14px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);background:transparent;color:inherit;font-size:15px;resize:vertical;outline:none}
+
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+    select,input[type="text"]{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);color:inherit;padding:8px;border-radius:8px}
+    .btn{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#032026;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted);font-weight:600}
+
+    .swap-area{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .swap-btn{width:72px;height:56px;border-radius:12px;border:1px dashed rgba(255,255,255,0.04);background:linear-gradient(180deg,rgba(255,255,255,0.008),transparent);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:20px}
+
+    .toolbar{display:flex;gap:8px;align-items:center}
+    .tiny{font-size:13px;padding:6px 8px;border-radius:8px}
+
+    .status{margin-top:12px;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;align-items:center}
+    .chips{display:flex;gap:8px}
+    .chip{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
+
+    footer{margin-top:18px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+
+    /* little animations */
+    .glow{position:relative}
+    .glow:after{content:'';position:absolute;inset:-6px;border-radius:12px;background:radial-gradient(60% 50% at 10% 10%,rgba(96,165,250,0.06),transparent);z-index:-1;opacity:0;transition:opacity .28s}
+    .glow:hover:after{opacity:1}
+
+    @media (max-width:860px){.grid{grid-template-columns:1fr;}.swap-area{flex-direction:row;justify-content:space-between}.logo{width:48px;height:48px}}
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <header>
+      <div class="logo">Tr</div>
+      <div>
+        <h1>Trans — Spanish ↔ English</h1>
+        <p class="lead">A polished, gift-ready translator. Type in Spanish or English — translation is instant and easy to copy.</p>
+      </div>
+    </header>
+
+    <div class="grid">
+      <div class="panel">
+        <div class="controls">
+          <div style="flex:1">
+            <label>From</label>
+            <select id="fromLang" aria-label="From language">
+              <option value="es">Spanish (es)</option>
+              <option value="en">English (en)</option>
+            </select>
+          </div>
+          <div style="width:120px;display:flex;gap:8px;align-items:center">
+            <button id="copyFrom" class="tiny btn ghost" title="Copy source">Copy</button>
+            <button id="clearFrom" class="tiny btn ghost" title="Clear source">Clear</button>
+          </div>
+        </div>
+        <textarea id="fromText" placeholder="Type your Spanish or English text here..."></textarea>
+      </div>
+
+      <div class="swap-area">
+        <div class="swap-btn glow" id="swapBtn" title="Swap languages">⇄</div>
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+          <div class="chip">Instant</div>
+          <div class="chip">No signup</div>
+          <div class="chip">Copy-ready</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="controls">
+          <div style="flex:1">
+            <label>To</label>
+            <select id="toLang" aria-label="To language">
+              <option value="en">English (en)</option>
+              <option value="es">Spanish (es)</option>
+            </select>
+          </div>
+          <div style="width:120px;display:flex;gap:8px;align-items:center">
+            <button id="copyTo" class="tiny btn" title="Copy translation">Copy</button>
+            <button id="clearTo" class="tiny btn ghost" title="Clear translation">Clear</button>
+          </div>
+        </div>
+        <textarea id="toText" placeholder="Translation appears here..." readonly></textarea>
+      </div>
+    </div>
+
+    <div class="status">
+      <div id="statusText">Ready — type to translate.</div>
+      <div class="chips"><div class="chip">Powered by LibreTranslate</div></div>
+    </div>
+
+    <footer>
+      <div>Gift edition — polished UI and subtle animation</div>
+      <div style="opacity:0.9">Tip: host on GitHub Pages or Netlify for a shareable link</div>
+    </footer>
+  </div>
+
+  <script>
+    // Polished translator (single-file). Works client-side and uses public LibreTranslate instances.
+    const fromText = document.getElementById('fromText');
+    const toText = document.getElementById('toText');
+    const fromLang = document.getElementById('fromLang');
+    const toLang = document.getElementById('toLang');
+    const swapBtn = document.getElementById('swapBtn');
+    const statusText = document.getElementById('statusText');
+    const copyFrom = document.getElementById('copyFrom');
+    const copyTo = document.getElementById('copyTo');
+    const clearFrom = document.getElementById('clearFrom');
+    const clearTo = document.getElementById('clearTo');
+
+    const apiCandidates = [
+      'https://libretranslate.de/translate',
+      'https://libretranslate.com/translate',
+      'https://translate.argosopentech.com/translate'
+    ];
+
+    let debounceTimer = null;
+    let lastRequestId = 0;
+
+    function setStatus(text, isError=false){
+      statusText.textContent = text;
+      statusText.style.color = isError ? '#ffb4b4' : '';
+    }
+
+    async function translateText(text, source, target){
+      if (!text.trim()) return '';
+      const body = { q: text, source: source, target: target, format: 'text' };
+
+      for (const url of apiCandidates){
+        try {
+          const resp = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
+          if (!resp.ok) throw new Error('network');
+          const data = await resp.json();
+          if (data.translatedText) return data.translatedText;
+          if (data.result) return data.result;
+          if (data?.translated_text) return data.translated_text;
+          if (typeof data === 'string') return data;
+          return JSON.stringify(data);
+        } catch (e) {
+          console.warn('Endpoint failed:', url, e);
+          continue;
+        }
+      }
+      throw new Error('All translation endpoints failed');
+    }
+
+    async function doTranslate(side){
+      const requestId = ++lastRequestId;
+      const left = side === 'left';
+      const source = left ? fromLang.value : toLang.value;
+      const target = left ? toLang.value : fromLang.value;
+      const text = left ? fromText.value : toText.value;
+      if (!text.trim()){
+        if (left) toText.value = '';
+        else fromText.value = '';
+        setStatus('Nothing to translate.');
+        return;
+      }
+      setStatus('Translating...');
+      try {
+        const translated = await translateText(text, source, target);
+        if (requestId !== lastRequestId) return; // stale
+        if (left) toText.value = translated;
+        else fromText.value = translated;
+        setStatus('Translation ready — copy it.');
+      } catch (err){
+        console.error(err);
+        setStatus('Translation failed — endpoints may be busy. Try again.', true);
+      }
+    }
+
+    function scheduleTranslate(side){
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => doTranslate(side), 450);
+    }
+
+    fromText.addEventListener('input', ()=> scheduleTranslate('left'));
+    toText.addEventListener('input', ()=> scheduleTranslate('right'));
+    fromLang.addEventListener('change', ()=> scheduleTranslate('left'));
+    toLang.addEventListener('change', ()=> scheduleTranslate('left'));
+
+    swapBtn.addEventListener('click', ()=>{
+      const a = fromLang.value, b = toLang.value;
+      fromLang.value = b; toLang.value = a;
+      // swap contents with a smooth fade effect
+      const ta = fromText.value; fromText.value = toText.value; toText.value = ta;
+      setStatus('Languages swapped.');
+      scheduleTranslate('left');
+    });
+
+    copyFrom.addEventListener('click', async ()=>{
+      try { await navigator.clipboard.writeText(fromText.value); setStatus('Copied source text.'); }
+      catch { setStatus('Copy failed. Select and press Ctrl/Cmd+C.', true); }
+    });
+    copyTo.addEventListener('click', async ()=>{
+      try { await navigator.clipboard.writeText(toText.value); setStatus('Copied translation.'); }
+      catch { setStatus('Copy failed. Select and press Ctrl/Cmd+C.', true); }
+    });
+
+    clearFrom.addEventListener('click', ()=>{ fromText.value=''; toText.value=''; setStatus('Cleared.'); });
+    clearTo.addEventListener('click', ()=>{ toText.value=''; setStatus('Cleared.'); });
+
+    // small demo content
+    fromLang.value = 'es'; toLang.value = 'en';
+    fromText.value = 'Hola — este es un regalo. ¡Espero que te guste!';
+    scheduleTranslate('left');
+  </script>
+</body>
+</html>
