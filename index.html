@@ -17,6 +17,7 @@
     .logo{width:54px;height:54px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#052024;font-weight:800;font-size:20px;box-shadow:0 6px 20px rgba(60,170,200,0.12)}
     h1{margin:0;font-size:20px}
     p.lead{margin:0;color:var(--muted);font-size:13px}
+    .greeting{margin-left:auto;font-weight:700;background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#012426;padding:8px 12px;border-radius:10px}
 
     .grid{display:grid;grid-template-columns:1fr 86px 1fr;gap:14px;margin-top:18px;align-items:start}
     .panel{background:linear-gradient(180deg,rgba(255,255,255,0.01),rgba(255,255,255,0.006));border-radius:10px;padding:12px;border:1px solid var(--glass)}
@@ -38,6 +39,9 @@
     .chips{display:flex;gap:8px}
     .chip{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,0.02);font-size:13px;color:var(--muted)}
 
+    .instructions{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .box{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);font-size:14px;color:var(--muted)}
+
     footer{margin-top:18px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
 
     /* little animations */
@@ -45,7 +49,7 @@
     .glow:after{content:'';position:absolute;inset:-6px;border-radius:12px;background:radial-gradient(60% 50% at 10% 10%,rgba(96,165,250,0.06),transparent);z-index:-1;opacity:0;transition:opacity .28s}
     .glow:hover:after{opacity:1}
 
-    @media (max-width:860px){.grid{grid-template-columns:1fr;}.swap-area{flex-direction:row;justify-content:space-between}.logo{width:48px;height:48px}}
+    @media (max-width:860px){.grid{grid-template-columns:1fr;}.swap-area{flex-direction:row;justify-content:space-between}.logo{width:48px;height:48px}.instructions{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -56,6 +60,7 @@
         <h1>Trans — Spanish ↔ English</h1>
         <p class="lead">A polished, gift-ready translator. Type in Spanish or English — translation is instant and easy to copy.</p>
       </div>
+      <div class="greeting">Hello Jonuco!</div>
     </header>
 
     <div class="grid">
@@ -106,6 +111,25 @@
     <div class="status">
       <div id="statusText">Ready — type to translate.</div>
       <div class="chips"><div class="chip">Powered by LibreTranslate</div></div>
+    </div>
+
+    <div class="instructions">
+      <div class="box">
+        <strong>How to share (English)</strong>
+        <ol>
+          <li>Enable GitHub Pages for this repository (Settings → Pages → Branch: <code>main</code>, Folder: <code>/</code>) to get a public URL.</li>
+          <li>Or drag & drop <code>index.html</code> at <a href="https://app.netlify.com/drop" style="color:var(--accent-2)">Netlify Drop</a> to get an instant shareable link.</li>
+          <li>Send the URL to your friend — they can open it in any browser and start translating.</li>
+        </ol>
+      </div>
+      <div class="box">
+        <strong>Cómo compartir (Español)</strong>
+        <ol>
+          <li>Activa GitHub Pages en este repositorio (Settings → Pages → Branch: <code>main</code>, Folder: <code>/</code>) para obtener una URL pública.</li>
+          <li>O arrastra y suelta <code>index.html</code> en <a href="https://app.netlify.com/drop" style="color:var(--accent-2)">Netlify Drop</a> para obtener un enlace inmediato.</li>
+          <li>Envía el enlace a tu amigo — puede abrirlo en cualquier navegador y empezar a traducir.</li>
+        </ol>
+      </div>
     </div>
 
     <footer>
